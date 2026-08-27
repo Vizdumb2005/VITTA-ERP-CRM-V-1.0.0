@@ -7,6 +7,26 @@ import { countryList } from '@/utils/countryList';
 
 export default function RegisterForm({ userLocation }) {
   const translate = useLanguage();
+  // Access the parent Ant Design Form instance
+  const form = Form.useFormInstance();
+
+  // Re-run validation for fields with errors whenever the language changes
+  useEffect(() => {
+    if (form) {
+      // Find all fields that currently have validation errors
+      const fieldsWithErrors = form
+        .getFieldsError()
+        .filter(({ errors }) => errors.length > 0)
+        .map(({ name }) => name);
+
+      // Re-trigger validation so error messages are
+      // updated in the selected language
+      if (fieldsWithErrors.length > 0) {
+        form.validateFields(fieldsWithErrors);
+      }
+    }
+  }, [translate, form]);
+
 
   return (
     <>
